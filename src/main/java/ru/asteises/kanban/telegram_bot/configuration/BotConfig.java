@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import ru.asteises.kanban.service.CallBackHandler;
+import ru.asteises.kanban.service.CommandHandler;
+import ru.asteises.kanban.service.MessageHandler;
+import ru.asteises.kanban.service.UserService;
 import ru.asteises.kanban.telegram_bot.Bot;
 
 @Configuration
@@ -13,8 +17,18 @@ public class BotConfig {
 
     @Bean
     public Bot bot(@Value("${telegram.bot.token}") String botToken,
-                   @Value("${telegram.bot.name}") String botName) {
-        return new Bot(botToken, botName);
+                   @Value("${telegram.bot.name}") String botName,
+                   UserService userService,
+                   CommandHandler commandHandler,
+                   MessageHandler messageHandler,
+                   CallBackHandler callBackHandler) {
+        return new Bot(
+                botToken,
+                botName,
+                userService,
+                commandHandler,
+                messageHandler,
+                callBackHandler);
     }
 
     @Bean

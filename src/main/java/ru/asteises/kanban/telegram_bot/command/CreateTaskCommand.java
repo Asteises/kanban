@@ -8,18 +8,18 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Slf4j
-public class StartCommand extends ServiceCommand {
+public class CreateTaskCommand extends ServiceCommand {
 
-    public StartCommand(String commandIdentifier, String description) {
+    public CreateTaskCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-        SendMessage message = new SendMessage();
-        message.enableMarkdown(true); // включаем/отключаем поддержку режима разметки, чтобы управлять отображением текста и добавлять эмодзи
         String chatId = String.valueOf(chat.getId());
         String userName = user.getUserName();
+        SendMessage message = new SendMessage();
+        message.enableMarkdown(true); // включаем/отключаем поддержку режима разметки, чтобы управлять отображением текста и добавлять эмодзи
         message.setChatId(chatId);
         message.setText("Welcome, " + userName + " ! Here is a 'Kanban by Asteises'");
 
