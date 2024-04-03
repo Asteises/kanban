@@ -20,7 +20,7 @@ public class CallBackHandlerImpl implements CallBackHandler {
     public SendMessage handleCallBack(CallbackQuery callbackQuery) throws NotFoundException {
         Long chatId = callbackQuery.getMessage().getChatId();
         String callbackData = callbackQuery.getData();
-        if (callbackData.equals(CallbackText.CREATE_NEW_BOARD)) {
+        if (callbackData.endsWith(CallbackText.CREATE_NEW_BOARD)) {
             return sendMessageService.forBoardName(chatId);
 
         } else if (callbackData.endsWith(CallbackText.ALL_BOARD_TASKS)) {
@@ -28,6 +28,8 @@ public class CallBackHandlerImpl implements CallBackHandler {
 
         } else if (callbackData.endsWith(CallbackText.CREATE_NEW_TASK)) {
             return sendMessageService.forTaskName(chatId, callbackData); // в callback зашит id board
+        } else if (callbackData.endsWith(CallbackText.GET_TASK)) { // в callback зашит id task
+            return sendMessageService.getTaskInfo(chatId, callbackData);
         }
         throw new NotFoundException("Not found type of callback");
     }

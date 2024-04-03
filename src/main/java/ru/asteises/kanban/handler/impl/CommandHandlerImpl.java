@@ -6,41 +6,40 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.asteises.kanban.model.dto.User;
-import ru.asteises.kanban.service.BoardService;
 import ru.asteises.kanban.handler.CommandHandler;
 import ru.asteises.kanban.service.SendMessageService;
-import ru.asteises.kanban.service.UserService;
-import ru.asteises.kanban.telegram_bot.keyboard.FirstPageKeyboard;
+import ru.asteises.kanban.telegram_bot.keyboard.BoardKeyboard;
 import ru.asteises.kanban.utils.CommandText;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class CommandHandlerImpl implements CommandHandler {
-
-    private final UserService userService;
-    private final BoardService boardService;
+    private final BoardKeyboard boardKeyboard;
     private final SendMessageService sendMessageService;
 
     @Override
     public SendMessage handleCommand(Message command) throws NotFoundException {
         if (command.isCommand()) {
-            SendMessage sendMessage;
-            Long userChatId = command.getChatId();
+            Long chatId = command.getChatId();
             String commandText = command.getText();
             if (CommandText.START.equals(commandText)) {
-                User user = userService.createUser(userChatId, command);
-                log.info("return User after create: {}", user);
-                sendMessage = FirstPageKeyboard.firstPageFullKeyBoard(userChatId);
-                return sendMessage;
-            }
-            else if (CommandText.NEW_BOARD.equals(commandText)) {
-                return sendMessageService.forBoardName(userChatId);
-            }
-
-            else {
-                return new SendMessage(userChatId.toString(), "Message text: " + commandText);
+                return sendMessageService.userRegistration(chatId, command);
+            } else if (commandText.equals(CommandText.NEW_BOARD)) {
+                return sendMessageService.forBoardName(chatId);
+            } else if (commandText.equals(CommandText.ALL_BOARDS)) {
+                return boardKeyboard.allUserBoards(chatId);
+            } else if (commandText.startsWith(CommandText.NEW_TASK)) {
+                if (commandText.length() <= CommandText.NEW_TASK.length()) {
+                    return sendMessageService.newTaskExample(chatId);
+                } else {
+                    String taskName = commandText.substring(CommandText.NEW_TASK.length() + 1).trim();
+                    return sendMessageService.createNewTask(chatId, taskName);
+                }
+            } else if (commandText.equals(CommandText.ALL_TASKS)) {
+                return sendMessageService.allUserTasks(chatId);
+            } else {
+                return new SendMessage(chatId.toString(), "Message text: " + commandText);
             }
         }
         throw new NotFoundException("Not found type of message");

@@ -10,7 +10,6 @@ import ru.asteises.kanban.handler.MessageHandler;
 import ru.asteises.kanban.model.dto.Board;
 import ru.asteises.kanban.service.BoardService;
 import ru.asteises.kanban.service.SendMessageService;
-import ru.asteises.kanban.utils.AppText;
 import ru.asteises.kanban.utils.CommonText;
 
 @Slf4j
@@ -23,7 +22,6 @@ public class MessageHandlerImpl implements MessageHandler {
 
     @Override
     public SendMessage handleMessage(Message message) throws NotFoundException {
-        SendMessage sendMessage;
         String messageText = message.getText();
         Long chatId = message.getChatId();
         if (message.isUserMessage()) {
@@ -31,12 +29,16 @@ public class MessageHandlerImpl implements MessageHandler {
             //FIXME Нужно добавить валидацию сообщения пользователя и сообщения об ошибках
 
             if (messageText.toLowerCase().endsWith(CommonText.BOARD)) { // тут messageText это название board
+                String boardName = messageText.substring(0, messageText.length() - CommonText.BOARD.length()).trim();
                 Board newBoard = boardService.createBoard(chatId, messageText);
-                return sendMessageService.afterSetBoardName(chatId, messageText, newBoard.getId());
+                return sendMessageService.afterSetBoardName(chatId, boardName, newBoard.getId());
             }
-
             else if (messageText.toLowerCase().endsWith(CommonText.TASK)) { // тут messageText это название task
-
+                log.info(message.getReplyToMessage().getText());
+                return new SendMessage(chatId.toString(), "bla bla");
+            }
+            else if (messageText.startsWith("/newtask")) {
+                return new SendMessage(chatId.toString(), "Создадим новую задачу");
             }
         }
         throw new NotFoundException("Not found type of message");

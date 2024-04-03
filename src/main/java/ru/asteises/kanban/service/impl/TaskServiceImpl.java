@@ -13,6 +13,10 @@ import ru.asteises.kanban.service.BoardService;
 import ru.asteises.kanban.service.TaskService;
 import ru.asteises.kanban.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -25,7 +29,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task createTask(Long userChatId, String taskName) {
         User creator = userService.getUserByChatId(userChatId);
-
         TaskEntity entity = TaskMapper.INSTANCE.toEntity(creator, taskName);
         taskJpaRepository.save(entity);
         log.info("new TaskEntity create: {}", entity);
@@ -42,5 +45,22 @@ public class TaskServiceImpl implements TaskService {
         taskJpaRepository.save(entity);
         log.info("new TaskEntity create: {}", entity);
         return TaskMapper.INSTANCE.toDto(entity);
+    }
+
+    @Override
+    public List<Task> getAllActualUserTasks(Long chatId) {
+        List<TaskEntity> taskEntities = taskJpaRepository.findAllByCreatorChatIdAndDeletedFalse(chatId);
+        List<Task> tasks = new ArrayList<>();
+        for (var entity : taskEntities) {
+            tasks.add(TaskMapper.INSTANCE.toSimpleDto(entity));
+        }
+        return tasks;
+    }
+
+    @Override
+    public Task getTaskById(Long chatId, String taskId) {
+        User creator = userService.getUserByChatId(chatId);
+        TaskEntity entity = taskJpaRepository.findByIdAndDeletedFalse(UUID.fromString(taskId)).orElseThrow();
+        return TaskMapper.INSTANCE.toDto(entity, creator);
     }
 }

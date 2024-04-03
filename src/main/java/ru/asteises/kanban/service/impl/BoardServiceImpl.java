@@ -12,6 +12,7 @@ import ru.asteises.kanban.repository.BoardJpaRepository;
 import ru.asteises.kanban.service.BoardService;
 import ru.asteises.kanban.service.UserService;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -38,5 +39,12 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(String.format("BoardEntity with id: %s not found!", boardId));
         });
         return BoardMapper.INSTANCE.toDto(entity);
+    }
+
+    @Override
+    public List<Board> getAllBoardsByUserId(Long chatId) {
+        List<BoardEntity> entities = boardJpaRepository.findAllByOwnerChatIdAndDeletedFalse(chatId);
+        log.info("board entities size: {}", entities.size());
+        return BoardMapper.INSTANCE.toDtos(entities);
     }
 }

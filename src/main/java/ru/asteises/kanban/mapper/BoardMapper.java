@@ -9,6 +9,7 @@ import ru.asteises.kanban.model.dto.Board;
 import ru.asteises.kanban.model.dto.User;
 import ru.asteises.kanban.model.entity.BoardEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 @Mapper(
@@ -35,6 +36,8 @@ public interface BoardMapper {
     @Mapping(target = "description", source = "description")
     @Mapping(target = "owner", expression = "java(UserMapper.INSTANCE.toDto(entity.getOwner()))")
     Board toDto(BoardEntity entity);
+
+    List<Board> toDtos(List<BoardEntity> entities);
 
     @Named("setBoardName")
     default String setBoardName(String name) {

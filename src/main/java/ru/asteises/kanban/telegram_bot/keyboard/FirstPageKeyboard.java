@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.asteises.kanban.utils.AppText;
+import ru.asteises.kanban.utils.ButtonText;
+import ru.asteises.kanban.utils.CallbackText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,29 +17,24 @@ public class FirstPageKeyboard {
     public static SendMessage firstPageFullKeyBoard(long chatId) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Here's what you can do:");
+        message.setText(AppText.AFTER_REGISTRATION);
+
         InlineKeyboardButton createBoardButton = new InlineKeyboardButton();
-        createBoardButton.setText("Create a board");
-        createBoardButton.setCallbackData("CREATE_BOARD");
-        InlineKeyboardButton joinBoardButton = new InlineKeyboardButton();
-        joinBoardButton.setText("Join to board");
-        joinBoardButton.setCallbackData("JOIN_BOARD");
+        createBoardButton.setText(ButtonText.CREATE_NEW_BOARD);
+        createBoardButton.setCallbackData(CallbackText.CREATE_NEW_BOARD);
+
         InlineKeyboardButton createTaskButton = new InlineKeyboardButton();
-        createTaskButton.setText("Create a task");
-        createTaskButton.setCallbackData("CREATE_TASK");
+        createTaskButton.setText(ButtonText.CREATE_NEW_TASK);
+        createTaskButton.setCallbackData(CallbackText.CREATE_NEW_TASK);
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         row1.add(createBoardButton);
-        row1.add(joinBoardButton);
         row2.add(createTaskButton);
-
         rows.add(row1);
         rows.add(row2);
-
         markup.setKeyboard(rows);
         message.setReplyMarkup(markup);
 

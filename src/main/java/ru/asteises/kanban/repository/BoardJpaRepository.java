@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.asteises.kanban.model.entity.BoardEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,4 +19,12 @@ public interface BoardJpaRepository extends JpaRepository<BoardEntity, UUID> {
             and e.id = :boardId
             """)
     Optional<BoardEntity> findByIdAndDeletedFalse(UUID boardId);
+
+    @Query("""
+            select e from BoardEntity as e
+            left join fetch e.owner
+            where e.deleted = false
+            and e.owner.chatId = :chatId
+            """)
+    List<BoardEntity> findAllByOwnerChatIdAndDeletedFalse(Long chatId);
 }
