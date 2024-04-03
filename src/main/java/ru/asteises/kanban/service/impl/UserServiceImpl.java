@@ -3,6 +3,7 @@ package ru.asteises.kanban.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.asteises.kanban.mapper.UserMapper;
@@ -18,19 +19,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserJpaRepository userJpaRepository;
 
-    @Override
-    public User createUser(Long chatId, CallbackQuery callbackQuery) {
-        UserEntity entity = UserMapper.INSTANCE.toEntity(chatId, callbackQuery);
-        userJpaRepository.save(entity);
-        log.info("new user created: {}", entity);
-        return UserMapper.INSTANCE.toDto(entity);
-    }
-
+    @Transactional
     @Override
     public User createUser(Long chatId, Message message) {
         UserEntity entity = UserMapper.INSTANCE.toEntity(chatId, message);
         userJpaRepository.save(entity);
-        log.info("new user created: {}", entity);
+        log.info("new UserEntity created: {}", entity);
         return UserMapper.INSTANCE.toDto(entity);
     }
 

@@ -1,10 +1,10 @@
-package ru.asteises.kanban.service;
+package ru.asteises.kanban.handler;
 
 import javassist.NotFoundException;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-public interface CommandHandler {
+public interface MessageHandler {
 
-    SendMessage handleCommand(Message command) throws NotFoundException;
+    SendMessage handleMessage(Message message) throws NotFoundException;
 }

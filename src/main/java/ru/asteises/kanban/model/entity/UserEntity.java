@@ -32,12 +32,12 @@ public class UserEntity extends BaseFields {
     private String username;
     private Long chatId;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_boards",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "board_id", referencedColumnName = "id"))
-    private Set<BoardEntity> boards;
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "users_boards",
+//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "board_id", referencedColumnName = "id"))
+//    private Set<BoardEntity> boards;
 
     @Override
     public boolean equals(Object o) {

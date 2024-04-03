@@ -32,8 +32,8 @@ public class BoardEntity extends BaseFields {
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity owner;
-    @ManyToMany(mappedBy = "boards", fetch = FetchType.LAZY)
-    private Set<UserEntity> users;
+//    @ManyToMany(mappedBy = "boards", fetch = FetchType.LAZY)
+//    private Set<UserEntity> users;
 
     @Override
     public boolean equals(Object o) {

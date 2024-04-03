@@ -1,4 +1,4 @@
-package ru.asteises.kanban.service;
+package ru.asteises.kanban.handler;
 
 import javassist.NotFoundException;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
